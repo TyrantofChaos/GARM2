@@ -27,7 +27,7 @@ private:
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float axisValue);
-	void OnFire();
+	
 
 public:
 

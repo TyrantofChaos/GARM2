@@ -26,28 +26,27 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	//Bind turning to input
 	PlayerInputComponent->BindAxis("TurnRight", this, &ABasePlayer::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("TurnUp", this, &ABasePlayer::AddControllerPitchInput);
 
 	// Bind Moving input
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABasePlayer::MoveForward);
-	PlayerInputComponent->BindAxis("TurnRight", this, &ABasePlayer::MoveRight);
+	PlayerInputComponent->BindAxis("Strafe", this, &ABasePlayer::MoveRight);
+
+	//Attack
+	PlayerInputComponent->BindAction("AttackInput", IE_Pressed, this, &ABaseCharacter::OnFire);
 }
 
 void ABasePlayer::MoveForward(float AxisValue) 
 {
-	//FRotator  = GetControlRotation();
-	//FRotator MakeRotation(0., GetControlRotation().Yaw, 0.);
-	//FVector  = FRotator(0., GetControlRotation().Yaw, 0.).Vector();
-	AddMovementInput(FRotator(0., GetControlRotation().Yaw, 0.).Vector(), AxisValue);
+	AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), AxisValue);
 }
 
 void ABasePlayer::MoveRight(float axisValue)
 {
-}
-
-void ABasePlayer::OnFire()
-{
+	AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), axisValue);
 }
 
 void ABasePlayer::DealDamage()
 {
+	// this can stay empty FN
 }

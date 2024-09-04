@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHurt, float, percent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDead, float, percent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHeal, float, percent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class A5__MICHAEL_API UHealthComponent : public UActorComponent
@@ -24,5 +27,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Variables") FOnHurt onHurt;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Variables") FOnDead onDead;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Variables") FOnHeal onHeal;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Variables") float maxHealth;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Variables") float currentHealth;
+
 };

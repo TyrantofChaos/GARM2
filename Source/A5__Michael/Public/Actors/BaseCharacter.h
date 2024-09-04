@@ -40,5 +40,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = defualt) TSubclassOf<AActor> weaponClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = default) class ARifle* rifle;
 
+	void OnFire();
 
 };
