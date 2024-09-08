@@ -9,7 +9,8 @@ UHealthComponent::UHealthComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	maxHealth = 5.f;
+	currentHealth = 0.f;
 	// ...
 }
 
@@ -18,9 +19,31 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	currentHealth = maxHealth;
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamage);
 	// ...
 	
+}
+
+void UHealthComponent::HandleDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigateBy, AActor* DamageCauser)
+{
+	currentHealth -= Damage;
+	if (currentHealth > 0.f)
+	{
+		if (Damage > 0)
+		{
+			onHurt.Broadcast(currentHealth / maxHealth);
+		}
+		else
+		{
+			onHeal.Broadcast(0.f);
+		}
+	}
+	else
+	{
+		GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UHealthComponent::HandleDamage);
+		onDead.Broadcast(0.f);
+	}
 }
 
 

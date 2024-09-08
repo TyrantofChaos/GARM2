@@ -13,5 +13,20 @@ UCLASS()
 class A5__MICHAEL_API AEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
+
+public:
+
+	AEnemy();
+
+protected:
+	virtual void BeginPlay() override;
+
+public:
+
+	virtual void Tick(float DeltaTime) override;
+	//void Attack();
+
+
+
 	
 };

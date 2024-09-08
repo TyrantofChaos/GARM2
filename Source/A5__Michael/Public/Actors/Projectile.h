@@ -19,9 +19,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class USphereComponent* SphereCollision;
+	class USphereComponent* sphereCollision;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class UStaticMeshComponent* SphereMesh;
+	class UStaticMeshComponent* sphereMesh;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Projectile) class UProjectileMovementComponent* projectileMovement;
 
 public:
 	// Called every frame
@@ -30,4 +31,6 @@ public:
 private:
 	UFUNCTION()
 	void BindToHitFunction(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION() void OnHit(UPrimitiveComponent* hitComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& hit);
 };

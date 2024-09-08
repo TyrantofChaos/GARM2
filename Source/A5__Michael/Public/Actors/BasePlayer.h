@@ -25,7 +25,7 @@ public:
 
 private:
 
-	void MoveForward(float AxisValue);
+	void MoveForward(float axisValue);
 	void MoveRight(float axisValue);
 	
 
@@ -41,8 +41,7 @@ public:
 	
 	
 
-	FRotator spawnRotation;
-	FVector spawnLocation;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) float health = 100.f;
 

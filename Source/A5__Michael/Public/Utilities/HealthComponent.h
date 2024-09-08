@@ -22,6 +22,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	UFUNCTION() void HandleDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigateBy, AActor* DamageCauser);
 
 public:	
 	// Called every frame
@@ -32,5 +33,8 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Variables") FOnHeal onHeal;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Variables") float maxHealth;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Variables") float currentHealth;
+
+	
+
 
 };

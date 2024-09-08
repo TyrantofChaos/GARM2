@@ -31,14 +31,17 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = defualt) class UChildActorComponent* childActor;
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh) class USkeletalMeshComponent* skeleton;
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh) class USkeletalMeshComponent* gunMesh;
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh) class USceneComponent* muzzleLoc;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile) TSubclassOf<class AProjectile> projectileClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Animation") class UCharacterAnimation* characterAnimation;
 	UWorld* world;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = defualt) TSubclassOf<AActor> weaponClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = default) class ARifle* rifle;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon) TSubclassOf<AActor> WeaponClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon) class ARifle* rifle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay) FVector gunOffSet;
+
+	FRotator spawnRotation;
+	FVector spawnLocation;
 
 	void OnFire();
 

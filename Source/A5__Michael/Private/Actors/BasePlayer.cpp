@@ -3,6 +3,8 @@
 
 #include "Actors/BasePlayer.h"// This must be first include
 #include "Camera/CameraComponent.h"
+#include "Actors/Rifle.h"
+#include "../A5__Michael.h"
 #include "GameFramework/SpringArmComponent.h"
 
 ABasePlayer::ABasePlayer() 
@@ -29,24 +31,42 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("TurnUp", this, &ABasePlayer::AddControllerPitchInput);
 
 	// Bind Moving input
-	PlayerInputComponent->BindAxis("MoveForward", this, &ABasePlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Strafe", this, &ABasePlayer::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ABasePlayer::MoveForward);
 
 	//Attack
-	PlayerInputComponent->BindAction("AttackInput", IE_Pressed, this, &ABaseCharacter::OnFire);
+	PlayerInputComponent->BindAction("AttackInput", IE_Pressed, this, &ABasePlayer::DealDamage);
 }
 
-void ABasePlayer::MoveForward(float AxisValue) 
+void ABasePlayer::MoveForward(float axisValue) 
 {
-	AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), AxisValue);
+	/*AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), AxisValue);*/
+	if (axisValue != 0.f)
+	{
+		AddMovementInput(GetActorForwardVector(), axisValue);
+	}
 }
 
 void ABasePlayer::MoveRight(float axisValue)
 {
-	AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), axisValue);
+	if (axisValue != 0.f)
+	{
+		AddMovementInput(GetActorRightVector(), axisValue);
+	}
+
+
+	//AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), axisValue);
 }
 
 void ABasePlayer::DealDamage()
 {
+	if (rifle)
+	{
+		rifle->Attack();
+	}
+	else
+	{
+		UE_LOG(Player, Warning, TEXT("Rifle is nullptr! Cannot attack."));
+	}
 	// this can stay empty FN
 }

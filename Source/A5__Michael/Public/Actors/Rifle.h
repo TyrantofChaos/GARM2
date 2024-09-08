@@ -23,4 +23,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void Attack();
+
+protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Default) class USkeletalMeshComponent* GunMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) TSubclassOf<class AProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) APawn* ParentPawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay) FVector gunOffSet;
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh) class USceneComponent* MuzzleLoc;
+	FRotator spawnRotation;
+	FVector spawnLocation;
 };

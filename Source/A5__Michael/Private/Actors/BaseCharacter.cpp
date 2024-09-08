@@ -2,6 +2,8 @@
 
 
 #include "Actors/BaseCharacter.h"
+#include "Actors/Projectile.h"
+#include "../A5__Michael.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter() {
@@ -12,28 +14,18 @@ ABaseCharacter::ABaseCharacter() {
 
 	childActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor"));
 	childActor->SetupAttachment(GetMesh(), "PlaceWeaponHere");
-	childActor->SetChildActorClass(weaponClass);
-
-	gunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Mesh"));
-	gunMesh->SetOnlyOwnerSee(false);
-	gunMesh->bCastDynamicShadow = false;
-	gunMesh->CastShadow = false;
-
-	muzzleLoc = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle Location"));
-	muzzleLoc->SetupAttachment(gunMesh);
-	muzzleLoc->SetRelativeLocation(gunMesh->GetSocketLocation("MuzzleFlashSocket"));
+	childActor->SetChildActorClass(WeaponClass);
 }
 
 // Called when the game starts or when spawned
-void ABaseCharacter::BeginPlay() 
+void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	characterAnimation = Cast<UCharacterAnimation>(GetMesh()->GetAnimInstance());
-	childActor->SetChildActorClass(weaponClass);
-	rifle = Cast<ARifle>(childActor);
+	childActor->SetChildActorClass(WeaponClass);
+	rifle = Cast<ARifle>(childActor->GetChildActor());
 	world = GetWorld();
-	gunMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("PlaceWeaponHere"));
 }
 
 // Called every frame
@@ -52,5 +44,14 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ABaseCharacter::OnFire()
 {
+	rifle->Attack();
+	/*UE_LOG(Character, Verbose, TEXT("Firing Weapon"));
+	spawnRotation = GetControlRotation();
+	spawnLocation = ((muzzleLoc != nullptr) ? muzzleLoc->GetComponentLocation() : GetActorLocation()) + spawnRotation.RotateVector(gunOffSet);
+
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+	GetWorld()->SpawnActor<AProjectile>(projectileClass, spawnLocation, spawnRotation, spawnParams);*/
 }
 
