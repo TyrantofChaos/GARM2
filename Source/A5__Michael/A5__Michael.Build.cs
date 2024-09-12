@@ -8,7 +8,7 @@ public class A5__Michael :ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore",
-                                                            "AnimGraphRuntime", "UMG"});
+                                                            "AnimGraphRuntime", "UMG", "AIModule", "NavigationSystem", "GameplayTasks"});
 
         //PrivateDependencyModuleNames.AddRange(new string[] {  });
 
