@@ -2,7 +2,7 @@
 
 
 #include "Actors/BaseCharacter.h"
-#include "Actors/Projectile.h"
+
 #include "../A5__Michael.h"
 
 // Sets default values

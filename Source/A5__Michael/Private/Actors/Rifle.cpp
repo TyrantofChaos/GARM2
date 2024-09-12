@@ -2,7 +2,7 @@
 
 
 #include "Actors/Rifle.h"
-#include "Actors/Projectile.h"
+
 #include "../A5__Michael.h"
 
 // Sets default values
@@ -14,8 +14,7 @@ ARifle::ARifle()
 	GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Mesh"));
 	SetRootComponent(GunMesh);
 	MuzzleLoc = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle Location"));
-	MuzzleLoc->SetupAttachment(GunMesh);
-	MuzzleLoc->SetRelativeLocation(GunMesh->GetSocketLocation("MuzzleFlashSocket"));
+	MuzzleLoc->SetupAttachment(GunMesh, TEXT("MuzzleFlashSocket"));
 
 	ProjectileClass = AProjectile::StaticClass();
 
@@ -63,12 +62,15 @@ void ARifle::Attack()
 	}
 
 	UE_LOG(Rifle, Warning, TEXT("Attempting to Fire Gun"));
-
+	spawnLocation = MuzzleLoc->GetComponentLocation();
+	spawnRotation = ParentPawn->GetBaseAimRotation();
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = ParentPawn->GetController();
 	spawnParams.Instigator = ParentPawn;
 
+	// Spawn the projectile at the muzzle location and in the correct direction
 	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FTransform(ParentPawn->GetBaseAimRotation(), GunMesh->GetSocketLocation(TEXT("MuzzleFlashSocket"))), spawnParams);
+	//GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FTransform(ParentPawn->GetBaseAimRotation(), GunMesh->GetSocketLocation(TEXT("MuzzleFlashSocket"))), spawnParams);
 
 	UE_LOG(Rifle, Warning, TEXT("Gun Fired"));
 }

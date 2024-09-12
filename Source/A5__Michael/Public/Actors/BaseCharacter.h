@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Actors/Rifle.h"
 #include "../Both/CharacterAnimation.h"
+#include "Actors/Projectile.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS()

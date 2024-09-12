@@ -13,28 +13,23 @@
 AProjectile::AProjectile() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	sphereRadius = 25.f;
 	sphereCollision = CreateDefaultSubobject<USphereComponent>("sphereCollision");
+	sphereCollision->InitSphereRadius(sphereRadius);
 	SetRootComponent(sphereCollision);
+
 	 
-	sphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("sphereMesh");
+	sphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("SphereMesh");
 	sphereMesh->SetCollisionProfileName("NoCollision");
+	sphereMesh->SetupAttachment(sphereCollision);
 
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
-	projectileMovement->UpdatedComponent = sphereCollision;
-	projectileMovement->InitialSpeed = 300.f;
-	projectileMovement->MaxSpeed = 300.f;
-	projectileMovement->bRotationFollowsVelocity = true;
-	projectileMovement->bShouldBounce = false;
+	projectileMovement->SetUpdatedComponent(sphereCollision);
+	projectileMovement->InitialSpeed = 1900.f;
+	projectileMovement->MaxSpeed = 1900.f;
+	projectileMovement->ProjectileGravityScale = 0.f;
 	InitialLifeSpan = 3.f;
-	// How to bind to a delegate
-	// Get to the delegate
-	// Right click and go to the declaration
-	// right click the type and go to the declaration
-	// Go to the end of the macro
-	// Copy the number of input paramaters
-	// Create a function returning void
-	// Paste the input paramters
-	// Define the function
+
 	sphereMesh->OnComponentHit.AddDynamic(this, &AProjectile::BindToHitFunction);
 
 	//The lines below will not compile
@@ -60,9 +55,16 @@ void AProjectile::BeginPlay() {
 	sphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnHit);
 }
 // Called every frame
-void AProjectile::Tick(float DeltaTime) {
+void AProjectile::Tick(float DeltaTime) 
+{
 	Super::Tick(DeltaTime);
 }
+
+void AProjectile::FireInDirection(const FVector& ShootDirection)
+{
+	projectileMovement->Velocity = ShootDirection * projectileMovement->InitialSpeed;
+}
+
 void AProjectile::BindToHitFunction(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
 	UE_LOG(Game, Log, TEXT("THis will never get called this is the hit delegate not the overlap one"));
 }

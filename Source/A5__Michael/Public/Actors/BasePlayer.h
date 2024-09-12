@@ -35,11 +35,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) class USpringArmComponent* springArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera) class UCameraComponent* thirdPerson;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera) float lookUpRate;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera) float turnRate;
-
-
-	
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera) float turnRate;	
 
 	
 

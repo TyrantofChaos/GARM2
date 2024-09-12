@@ -23,10 +23,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	class UStaticMeshComponent* sphereMesh;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Projectile) class UProjectileMovementComponent* projectileMovement;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) AController* OwnerController;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) float DamageAmount;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) FVector Size;
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	float sphereRadius;
+
+	void FireInDirection(const FVector& ShootDirection);
 
 private:
 	UFUNCTION()

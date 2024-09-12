@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Actors/Projectile.h"
 #include "GameFramework/Actor.h"
 #include "Rifle.generated.h"
 
@@ -29,7 +30,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Default) class USkeletalMeshComponent* GunMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) TSubclassOf<class AProjectile> ProjectileClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Projectile") TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) APawn* ParentPawn;
 

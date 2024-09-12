@@ -13,5 +13,13 @@ UCLASS()
 class A5__MICHAEL_API UWanderTask : public UBTTaskNode
 {
 	GENERATED_BODY()
+
+	UWanderTask();
+
+	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Search") float MaxDistance;
+	UPROPERTY(EditAnywhere, Category = "Blackboard") FBlackboardKeySelector TargetLocationKey;
 	
 };
