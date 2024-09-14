@@ -14,26 +14,25 @@ AProjectile::AProjectile() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	sphereRadius = 25.f;
-	sphereCollision = CreateDefaultSubobject<USphereComponent>("sphereCollision");
-	sphereCollision->InitSphereRadius(sphereRadius);
-	SetRootComponent(sphereCollision);
+	SphereCollision = CreateDefaultSubobject<USphereComponent>("sphereCollision");
+	SphereCollision->InitSphereRadius(sphereRadius);
+	SetRootComponent(SphereCollision);
 
 	 
-	sphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("SphereMesh");
-	sphereMesh->SetCollisionProfileName("NoCollision");
-	sphereMesh->SetupAttachment(sphereCollision);
+	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("SphereMesh");
+	SphereMesh->SetCollisionProfileName("NoCollision");
+	SphereMesh->SetupAttachment(SphereCollision);
 
 	projectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
-	projectileMovement->SetUpdatedComponent(sphereCollision);
+	projectileMovement->SetUpdatedComponent(SphereCollision);
 	projectileMovement->InitialSpeed = 1900.f;
 	projectileMovement->MaxSpeed = 1900.f;
 	projectileMovement->ProjectileGravityScale = 0.f;
 	InitialLifeSpan = 3.f;
 
-	sphereMesh->OnComponentHit.AddDynamic(this, &AProjectile::BindToHitFunction);
+	SphereMesh->OnComponentHit.AddDynamic(this, &AProjectile::BindToHitFunction);
 
 	//The lines below will not compile
-	// // Long error
 	//sphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::BindToHitFunction);
 
 
@@ -41,7 +40,7 @@ AProjectile::AProjectile() {
 	// Only do this here never again
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Asset(TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-	sphereMesh->SetStaticMesh(Asset.Object);
+	SphereMesh->SetStaticMesh(Asset.Object);
 
 	//End bad habit
 }
@@ -52,7 +51,7 @@ void AProjectile::BeginPlay() {
 
 	FTimerHandle TimerHandle;
 	// using 5/6
-	sphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnHit);
+	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnHit);
 }
 // Called every frame
 void AProjectile::Tick(float DeltaTime) 

@@ -19,9 +19,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class USphereComponent* sphereCollision;
+	class USphereComponent* SphereCollision;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class UStaticMeshComponent* sphereMesh;
+	class UStaticMeshComponent* SphereMesh;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Projectile) class UProjectileMovementComponent* projectileMovement;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) AController* OwnerController;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Variable) float DamageAmount;

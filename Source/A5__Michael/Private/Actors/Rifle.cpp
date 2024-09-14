@@ -13,6 +13,7 @@ ARifle::ARifle()
 
 	GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Mesh"));
 	SetRootComponent(GunMesh);
+
 	MuzzleLoc = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle Location"));
 	MuzzleLoc->SetupAttachment(GunMesh, TEXT("MuzzleFlashSocket"));
 
@@ -70,7 +71,6 @@ void ARifle::Attack()
 
 	// Spawn the projectile at the muzzle location and in the correct direction
 	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FTransform(ParentPawn->GetBaseAimRotation(), GunMesh->GetSocketLocation(TEXT("MuzzleFlashSocket"))), spawnParams);
-	//GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FTransform(ParentPawn->GetBaseAimRotation(), GunMesh->GetSocketLocation(TEXT("MuzzleFlashSocket"))), spawnParams);
 
 	UE_LOG(Rifle, Warning, TEXT("Gun Fired"));
 }
