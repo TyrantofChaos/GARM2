@@ -2,6 +2,8 @@
 
 
 #include "Actors/BaseCharacter.h"
+#include "Both/CharacterAnimation.h"
+
 
 #include "../A5__Michael.h"
 
@@ -15,6 +17,10 @@ ABaseCharacter::ABaseCharacter() {
 	childActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Child Actor"));
 	childActor->SetupAttachment(GetMesh(), "PlaceWeaponHere");
 	childActor->SetChildActorClass(WeaponClass);
+	FTransform SocketTransform = GetMesh()->GetSocketTransform(TEXT("PlaceWeaponHere"));
+
+	WeaponClass = ARifle::StaticClass();
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +32,15 @@ void ABaseCharacter::BeginPlay()
 	childActor->SetChildActorClass(WeaponClass);
 	rifle = Cast<ARifle>(childActor->GetChildActor());
 	world = GetWorld();
+
+	rifle->onRifleFire.AddDynamic(this, &ABaseCharacter::FireAnimation);
+	rifle->onRifleFire.AddDynamic(this, &ABaseCharacter::OnReloadStartHandler);
+
+	HealthComponent->onHurt.AddDynamic(this, &ABaseCharacter::HandleHurt);
+	HealthComponent->onHurt.AddDynamic(this, &ABaseCharacter::HandleDead);
+
+	characterAnimation->onReloadEnded.AddDynamic(this, &ABaseCharacter::OnReloadEndHandler);
+	characterAnimation->onReloadEnded.AddDynamic(this, &ABaseCharacter::OnReloadNowHandler);
 }
 
 // Called every frame
@@ -45,13 +60,53 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABaseCharacter::OnFire()
 {
 	rifle->Attack();
-	/*UE_LOG(Character, Verbose, TEXT("Firing Weapon"));
-	spawnRotation = GetControlRotation();
-	spawnLocation = ((muzzleLoc != nullptr) ? muzzleLoc->GetComponentLocation() : GetActorLocation()) + spawnRotation.RotateVector(gunOffSet);
+}
 
-	FActorSpawnParameters spawnParams;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+void ABaseCharacter::OnReloadEndHandler()
+{
+	rifle->ActionStopped();
+}
 
-	GetWorld()->SpawnActor<AProjectile>(projectileClass, spawnLocation, spawnRotation, spawnParams);*/
+void ABaseCharacter::OnReloadNowHandler()
+{
+	rifle->ReloadAmmo();
+}
+
+void ABaseCharacter::HandleDead(float Ratio)
+{
+	characterAnimation->DeathAnimation(Ratio);
+	SetActorEnableCollision(false);
+	// rifle the owner died
+	onCharacterDeath.Broadcast();
+}
+
+void ABaseCharacter::HandleHurt(float Ratio)
+{
+	characterAnimation->HurtAnimation(Ratio);
+}
+
+void ABaseCharacter::DelayedDestruction()
+{
+	Destroy();
+}
+
+void ABaseCharacter::FireAnimation()
+{
+	characterAnimation->FireAnimation();
+}
+
+void ABaseCharacter::HurtAnimation(AActor* OtherActor)
+{
+	characterAnimation->HurtAnimation(0.f);
+}
+
+void ABaseCharacter::HandleRifleFire(AActor* OtherActor)
+{
+	characterAnimation->FireAnimation();
+}
+
+void ABaseCharacter::OnReloadStartHandler()
+{
+	characterAnimation->ReloadAnimation();
 }
 

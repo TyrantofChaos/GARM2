@@ -19,8 +19,11 @@ ARifle::ARifle()
 
 	ProjectileClass = AProjectile::StaticClass();
 
-	// Set restrictions
+	Time = 2.f;
+	ActionHappening = false;
 
+	MaxAmmo = 6;
+	CurrentAmmo = MaxAmmo;
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +35,7 @@ void ARifle::BeginPlay()
 	{
 		ParentPawn = pawn;
 		UE_LOG(Rifle, Log, TEXT("Rifle attached to pawn: %s"), *pawn->GetName());
-		// reload logic here
+		this->ReloadAmmo();
 	}
 	else
 	{
@@ -61,17 +64,91 @@ void ARifle::Attack()
 		UE_LOG(Rifle, Error, TEXT("Cannot fire: ParentPawn is nullptr"));
 		return;
 	}
+	if (CanShoot())
+	{
+		UE_LOG(Rifle, Warning, TEXT("Attempting to Fire Gun"));
+		spawnLocation = MuzzleLoc->GetComponentLocation();
+		spawnRotation = ParentPawn->GetBaseAimRotation();
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = ParentPawn->GetController();
+		spawnParams.Instigator = ParentPawn;
 
-	UE_LOG(Rifle, Warning, TEXT("Attempting to Fire Gun"));
-	spawnLocation = MuzzleLoc->GetComponentLocation();
-	spawnRotation = ParentPawn->GetBaseAimRotation();
-	FActorSpawnParameters spawnParams;
-	spawnParams.Owner = ParentPawn->GetController();
-	spawnParams.Instigator = ParentPawn;
+		// Spawn the projectile at the muzzle location and in the correct direction
+		GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FTransform(ParentPawn->GetBaseAimRotation(), GunMesh->GetSocketLocation(TEXT("MuzzleFlashSocket"))), spawnParams);
 
-	// Spawn the projectile at the muzzle location and in the correct direction
-	GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FTransform(ParentPawn->GetBaseAimRotation(), GunMesh->GetSocketLocation(TEXT("MuzzleFlashSocket"))), spawnParams);
+		ActionHappening = true;
+		FTimerHandle timerHandle;
+		GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &ARifle::ActionStopped, Time);
 
-	UE_LOG(Rifle, Warning, TEXT("Gun Fired"));
+		onRifleFire.Broadcast();
+		this->UseAmmo();
+		UE_LOG(Rifle, Warning, TEXT("Gun Fired"));
+	}
+	
+
+}
+
+void ARifle::OwnerDied()
+{
+	OwnerAlive = true;
+}
+
+bool ARifle::CanShoot() const
+{
+	if (!ActionHappening)
+	{
+		if (CurrentAmmo > 0.f)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+FVector ARifle::GetShotLocation() const
+{
+	return FVector();
+}
+
+void ARifle::ActionStopped()
+{
+	ActionHappening = false;
+	onActionStopped.Broadcast();
+}
+
+void ARifle::ReloadAmmo()
+{
+	if (CanReload())
+	{
+		CurrentAmmo = MaxAmmo;
+		UE_LOG(Rifle, Log, TEXT("Ammo reloaded"));
+		onAmmoChanged.Broadcast(CurrentAmmo, MaxAmmo);
+	}
+}
+
+bool ARifle::CanReload() const
+{
+	return CurrentAmmo < MaxAmmo;
+}
+
+void ARifle::RequestReload()
+{
+	if (ActionHappening) return;
+	else
+	{
+		ActionHappening = true;
+		onReloadStart.Broadcast();
+	}
+	
+}
+
+void ARifle::UseAmmo()
+{
+	CurrentAmmo = FMath::Max(CurrentAmmo - 1.f, 0.f);
+	if (CurrentAmmo == 0)
+	{
+		ReloadAmmo();
+	}
+	onAmmoChanged.Broadcast(CurrentAmmo, MaxAmmo);
 }
 

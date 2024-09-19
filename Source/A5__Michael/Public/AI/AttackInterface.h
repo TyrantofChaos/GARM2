@@ -19,9 +19,10 @@ class UAttackInterface : public UInterface
 class A5__MICHAEL_API IAttackInterface
 {
 	GENERATED_BODY()
+	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+public:
+
 	virtual void Attack() = 0;
 	virtual void EnemyAttack() = 0;
 	virtual void EnemyReload() = 0;
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-public:
 };

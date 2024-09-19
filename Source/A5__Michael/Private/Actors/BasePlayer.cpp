@@ -19,6 +19,11 @@ ABasePlayer::ABasePlayer()
 	// Set Camera
 	thirdPerson = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	thirdPerson->SetupAttachment(springArm, USpringArmComponent::SocketName);
+	thirdPerson->bUsePawnControlRotation = false;
+
+	health = 2.f;
+
+
 }
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) 
@@ -36,6 +41,40 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	//Attack
 	PlayerInputComponent->BindAction("AttackInput", IE_Pressed, this, &ABasePlayer::DealDamage);
+	PlayerInputComponent->BindAction("ReloadInput", IE_Pressed, this, &ABasePlayer::Reload);
+}
+
+void ABasePlayer::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//HealthComponent->onDead.AddDynamic(this, &ABasePlayer::HandleDeath);
+	PlayerController = Cast<APlayerController>(GetWorld()->GetFirstPlayerController());
+	if (PlayerController)
+	{
+		if (HUDWidgetClass)
+		{
+			HUDWidget = CreateWidget<UUserWidget>(PlayerController, HUDWidgetClass);
+			if (HUDWidget)
+			{
+				HUDWidget->AddToViewport();
+				PlayerHUDClass = Cast<UPlayerHUD>(HUDWidget);
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(Player, Warning, TEXT("Need a player controller to create a widget"));
+		this->Destroy();
+	}
+
+	
+	HealthComponent->onHurt.AddDynamic(this, &ABasePlayer::UpdatePlayerHealth);
+	HealthComponent->onDead.AddDynamic(this, &ABasePlayer::UpdatePlayerHealth);
+	HealthComponent->onHeal.AddDynamic(this, &ABasePlayer::UpdatePlayerHealth);
+
+	rifle->onAmmoChanged.AddDynamic(this, &ABasePlayer::SetHUDAmmo);
+	rifle->ReloadAmmo();
 }
 
 void ABasePlayer::MoveForward(float axisValue) 
@@ -58,6 +97,20 @@ void ABasePlayer::MoveRight(float axisValue)
 	//AddMovementInput(FRotator(0.f, GetControlRotation().Yaw, 0.f).Vector(), axisValue);
 }
 
+void ABasePlayer::Reload()
+{
+	if (rifle)
+	{
+		rifle->ReloadAmmo();
+		if (characterAnimation)
+		{
+			UE_LOG(Player, Warning, TEXT("Playing Reload Animation"))
+			characterAnimation->ReloadAnimation();
+		}
+			
+	}
+}
+
 void ABasePlayer::DealDamage()
 {
 	if (rifle)
@@ -70,3 +123,15 @@ void ABasePlayer::DealDamage()
 	}
 	// this can stay empty FN
 }
+
+void ABasePlayer::UpdatePlayerHealth(float Percent)
+{
+	PlayerHUDClass->SetHealth(Percent);
+}
+
+void ABasePlayer::SetHUDAmmo(float Current, float Max)
+{
+	PlayerHUDClass->SetAmmo(Current, Max);
+}
+
+

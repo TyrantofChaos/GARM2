@@ -1,13 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+// Includes
 #pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Actors/Rifle.h"
 #include "../Both/CharacterAnimation.h"
 #include "Actors/Projectile.h"
+#include "Utilities/HealthComponent.h"
+#include "Both/PlayerHUD.h"
+// Final Inlcude
 #include "BaseCharacter.generated.h"
+
+// Delegates
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterDeath);
 
 UCLASS()
 class A5__MICHAEL_API ABaseCharacter : public ACharacter
@@ -21,6 +27,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	
 
 
 public:	
@@ -45,5 +53,19 @@ public:
 	FVector spawnLocation;
 
 	void OnFire();
+	UFUNCTION() void OnReloadEndHandler();
+	UFUNCTION() void OnReloadNowHandler();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components") class UHealthComponent* HealthComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Events") FOnCharacterDeath onCharacterDeath;
+
+	UFUNCTION() void HandleDead(float Ratio);
+	UFUNCTION() void HandleHurt(float Ratio);
+	void DelayedDestruction();
+	FTimerHandle TimerHandleDestroy;
+
+	UFUNCTION() void FireAnimation();
+	UFUNCTION() void HurtAnimation(AActor* OtherActor);
+	UFUNCTION() void HandleRifleFire(AActor* OtherActor);
+	UFUNCTION() void OnReloadStartHandler();
 };
