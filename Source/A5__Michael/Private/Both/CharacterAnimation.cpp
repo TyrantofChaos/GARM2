@@ -6,14 +6,17 @@
 
 void UCharacterAnimation::NativeUpdateAnimation(float DeltaSeconds) {
 	APawn *Pawn = TryGetPawnOwner();
-	if(Pawn) {
+	if(Pawn) 
+	{
 		{
 			//Is Valid
 			Velocity = Pawn->GetVelocity().Size();
 
 			Direction = UKismetAnimationLibrary::CalculateDirection(Pawn->GetVelocity(), Pawn->GetActorRotation());
 		}
-	} else {
+	} 
+	else 
+	{
 		// Is Not Valid
 		PreviewWindowUpdate();
 	}

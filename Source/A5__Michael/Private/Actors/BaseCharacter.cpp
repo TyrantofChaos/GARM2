@@ -34,13 +34,13 @@ void ABaseCharacter::BeginPlay()
 	world = GetWorld();
 
 	rifle->onRifleFire.AddDynamic(this, &ABaseCharacter::FireAnimation);
-	rifle->onRifleFire.AddDynamic(this, &ABaseCharacter::OnReloadStartHandler);
+	rifle->onReloadStart.AddDynamic(this, &ABaseCharacter::OnReloadStartHandler);
 
 	HealthComponent->onHurt.AddDynamic(this, &ABaseCharacter::HandleHurt);
-	HealthComponent->onHurt.AddDynamic(this, &ABaseCharacter::HandleDead);
+	HealthComponent->onDead.AddDynamic(this, &ABaseCharacter::HandleDeath);
 
 	characterAnimation->onReloadEnded.AddDynamic(this, &ABaseCharacter::OnReloadEndHandler);
-	characterAnimation->onReloadEnded.AddDynamic(this, &ABaseCharacter::OnReloadNowHandler);
+	characterAnimation->onReloadNow.AddDynamic(this, &ABaseCharacter::OnReloadNowHandler);
 }
 
 // Called every frame
@@ -72,12 +72,12 @@ void ABaseCharacter::OnReloadNowHandler()
 	rifle->ReloadAmmo();
 }
 
-void ABaseCharacter::HandleDead(float Ratio)
+void ABaseCharacter::HandleDeath(float Ratio)
 {
 	characterAnimation->DeathAnimation(Ratio);
 	SetActorEnableCollision(false);
 	// rifle the owner died
-	onCharacterDeath.Broadcast();
+	//onCharacterDeath.Broadcast();
 }
 
 void ABaseCharacter::HandleHurt(float Ratio)

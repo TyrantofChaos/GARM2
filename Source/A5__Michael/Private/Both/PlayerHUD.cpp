@@ -52,19 +52,13 @@ void UPlayerHUD::Tick(float DeltaTime)
 		{
 			ActorsToIgnore.Add(PlayerPawn);
 		}
-
 	}
-
-
 }
 
 void UPlayerHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
-	if (Crosshair)
-	{
-		DynamicMaterial = Crosshair->GetDynamicMaterial();
-	}
+	if (Crosshair) DynamicMaterial = Crosshair->GetDynamicMaterial();	
 }
 
 void UPlayerHUD::UpdateMaxAmmo(int32 NewMaxAmmo)
@@ -74,10 +68,7 @@ void UPlayerHUD::UpdateMaxAmmo(int32 NewMaxAmmo)
 
 void UPlayerHUD::SetHealth(float Percent)
 {
-	if (HealthBar)
-	{
-		HealthBar->SetPercent(Percent);
-	}
+	if (HealthBar) HealthBar->SetPercent(Percent);	
 }
 
 void UPlayerHUD::SetAmmo(float Current, float Max)

@@ -64,7 +64,7 @@ void ABasePlayer::BeginPlay()
 	}
 	else
 	{
-		UE_LOG(Player, Warning, TEXT("Need a player controller to create a widget"));
+		UE_LOG(PlayerLog, Warning, TEXT("Need a player controller to create a widget"));
 		this->Destroy();
 	}
 
@@ -74,7 +74,7 @@ void ABasePlayer::BeginPlay()
 	HealthComponent->onHeal.AddDynamic(this, &ABasePlayer::UpdatePlayerHealth);
 
 	rifle->onAmmoChanged.AddDynamic(this, &ABasePlayer::SetHUDAmmo);
-	rifle->ReloadAmmo();
+	//rifle->ReloadAmmo();
 }
 
 void ABasePlayer::MoveForward(float axisValue) 
@@ -104,7 +104,7 @@ void ABasePlayer::Reload()
 		rifle->ReloadAmmo();
 		if (characterAnimation)
 		{
-			UE_LOG(Player, Warning, TEXT("Playing Reload Animation"))
+			UE_LOG(PlayerLog, Warning, TEXT("Playing Reload Animation"))
 			characterAnimation->ReloadAnimation();
 		}
 			
@@ -119,7 +119,7 @@ void ABasePlayer::DealDamage()
 	}
 	else
 	{
-		UE_LOG(Player, Warning, TEXT("Rifle is nullptr! Cannot attack."));
+		UE_LOG(PlayerLog, Warning, TEXT("Rifle is nullptr! Cannot attack."));
 	}
 	// this can stay empty FN
 }

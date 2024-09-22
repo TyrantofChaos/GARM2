@@ -59,7 +59,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components") class UHealthComponent* HealthComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Events") FOnCharacterDeath onCharacterDeath;
 
-	UFUNCTION() void HandleDead(float Ratio);
+	UFUNCTION() void HandleDeath(float Ratio);
 	UFUNCTION() void HandleHurt(float Ratio);
 	void DelayedDestruction();
 	FTimerHandle TimerHandleDestroy;
