@@ -11,6 +11,8 @@
 
 void UCodeGameInstance::LoadFirstLevel()
 {
+	UE_LOG(Game, Warning, TEXT("GameLevels has %d entries"), GameLevels.Num());
+
 	if (GameLevels.IsValidIndex(FirstLevelIndex))
 	{
 		UGameplayStatics::OpenLevel(this, GameLevels[FirstLevelIndex]);

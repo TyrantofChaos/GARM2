@@ -26,7 +26,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget)) class UButtonWithText* RestartButton;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget)) class UVerticalBox* ButtonArea;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget)) class UWidgetSwitcher* ResultsSwitch;
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget)) class UCodeGameInstance* GameInstance;
+	UPROPERTY(BlueprintReadOnly) class UCodeGameInstance* GameInstance;
 
 protected:
 

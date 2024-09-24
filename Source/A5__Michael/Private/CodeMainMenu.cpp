@@ -11,6 +11,8 @@
 
 void UCodeMainMenu::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	if (StartButton)
 	{
 		StartButton->onButtonClicked.AddDynamic(this, &UCodeMainMenu::OnStartClicked);

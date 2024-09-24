@@ -22,8 +22,8 @@ protected:
 public:
 
 	UPROPERTY(BlueprintReadOnly) class UCodeGameInstance* GameInstance;
-	UPROPERTY(EditDefaultsOnly) class UButtonWithText* StartButton;
-	UPROPERTY(EditDefaultsOnly) class UButtonWithText* QuitButton;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget)) class UButtonWithText* StartButton;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget)) class UButtonWithText* QuitButton;
 
 private:
 
