@@ -48,7 +48,7 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//HealthComponent->onDead.AddDynamic(this, &ABasePlayer::HandleDeath);
+	HealthComponent->onDead.AddDynamic(this, &ABasePlayer::HandleDead);
 	PlayerController = Cast<APlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
@@ -75,6 +75,7 @@ void ABasePlayer::BeginPlay()
 
 	rifle->onAmmoChanged.AddDynamic(this, &ABasePlayer::SetHUDAmmo);
 	//rifle->ReloadAmmo();
+	
 }
 
 void ABasePlayer::MoveForward(float axisValue) 
@@ -132,6 +133,35 @@ void ABasePlayer::UpdatePlayerHealth(float Percent)
 void ABasePlayer::SetHUDAmmo(float Current, float Max)
 {
 	PlayerHUDClass->SetAmmo(Current, Max);
+}
+
+void ABasePlayer::WinGame()
+{
+	if (PlayerController) DisableInput(PlayerController);
+
+	// Remove HUD from Parent
+	if (PlayerHUDClass)
+	{
+		PlayerHUDClass->RemoveFromParent();
+	}
+}
+
+void ABasePlayer::HandleDead(float Ratio)
+{
+	onEndGame.Broadcast();
+}
+
+void ABasePlayer::SetTeamNumber(int32 NewTeamNumber)
+{
+}
+
+void ABasePlayer::IncreaseMaxAmmo(int32 Amt)
+{
+	if (rifle)
+	{
+		rifle->MaxAmmo += Amt;
+		SetHUDAmmo(rifle->CurrentAmmo, rifle->MaxAmmo);
+	}
 }
 
 

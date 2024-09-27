@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+// Final Include
 #include "CodeGameInstance.generated.h"
 
 /**
@@ -15,6 +16,8 @@ class A5__MICHAEL_API UCodeGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
+	
 
 	UFUNCTION(BlueprintCallable) void LoadFirstLevel();
 	UFUNCTION(BlueprintCallable) void QuitGame();

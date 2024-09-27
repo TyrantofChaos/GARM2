@@ -48,12 +48,17 @@ void UResultMenu::LoadMainMenu()
 	GameInstance = Cast<UCodeGameInstance>(UGameplayStatics::GetGameInstance(this));
 	if (GameInstance)
 	{
-		GameInstance->LoadCurrentLevel();
+		GameInstance->LoadMainMenu();
 	}
 }
 
 void UResultMenu::RestartGame()
 {
+	GameInstance = Cast<UCodeGameInstance>(UGameplayStatics::GetGameInstance(this));
+	if (GameInstance)
+	{
+		GameInstance->LoadCurrentLevel();
+	}
 }
 
 void UResultMenu::NativeConstruct()

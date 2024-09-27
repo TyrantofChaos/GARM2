@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Actors/BaseCharacter.h"
+// Final Include
 #include "BasePlayer.generated.h"
+
+// Delegates
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndGame);
 
 //class USpringArmComponent;
 /**
@@ -46,7 +50,9 @@ private:
 
 public:
 
-	
+	// Declare Delegates
+	UPROPERTY(BlueprintAssignable, Category = "Events") FOnEndGame onEndGame;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) class USpringArmComponent* springArm;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera) class UCameraComponent* thirdPerson;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera) float lookUpRate;
@@ -59,5 +65,12 @@ public:
 	void DealDamage();
 	UFUNCTION() void UpdatePlayerHealth(float Percent);
 	UFUNCTION() void SetHUDAmmo(float Current, float Max);
+	UFUNCTION(BlueprintCallable) void WinGame();
+	UFUNCTION() void HandleDead(float Ratio);
+
+	UPROPERTY(EditAnywhere, Category = "Team") int32 TeamNumber;
+
+	UFUNCTION(BlueprintCallable, Category = "Team") void SetTeamNumber(int32 NewTeamNumber);
+	UFUNCTION() void IncreaseMaxAmmo(int32 Amt);
 
 };
